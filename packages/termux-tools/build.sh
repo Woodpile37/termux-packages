@@ -1,8 +1,8 @@
-TERMUX_PKG_HOMEPAGE=https://termux.org/
+TERMUX_PKG_HOMEPAGE=https://termux.dev/
 TERMUX_PKG_DESCRIPTION="Basic system tools for Termux"
 TERMUX_PKG_LICENSE="GPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=0.184
+TERMUX_PKG_VERSION=1.20
 TERMUX_PKG_SKIP_SRC_EXTRACT=true
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
 TERMUX_PKG_ESSENTIAL=true
@@ -18,7 +18,7 @@ etc/termux-login.sh
 # Some of these packages are not dependencies and used only to ensure
 # that core packages are installed after upgrading (we removed busybox
 # from essentials).
-TERMUX_PKG_DEPENDS="bzip2, coreutils, curl, dash, diffutils, findutils, gawk, grep, gzip, less, procps, psmisc, sed, tar, termux-am, termux-am-socket, termux-exec, util-linux, xz-utils, dialog"
+TERMUX_PKG_DEPENDS="bzip2, coreutils, curl, dash, diffutils, findutils, gawk, grep, gzip, less, procps, psmisc, sed, tar, termux-am, termux-am-socket (>= 1.5.0), termux-exec, util-linux, xz-utils, dialog"
 
 # Optional packages that are distributed as part of bootstrap archives.
 TERMUX_PKG_RECOMMENDS="ed, dos2unix, inetutils, net-tools, patch, unzip"
@@ -53,6 +53,30 @@ termux_step_make_install() {
 				$TERMUX_PREFIX/bin/$script
 	done
 
+	{
+		echo ""
+		echo "Welcome to Termux!"
+		echo ""
+		echo "Communities: https://termux.dev/community"
+		echo "Gitter chat: https://gitter.im/termux/termux"
+		echo "IRC channel: #termux on libera.chat"
+		echo ""
+		echo "Working with packages:"
+		echo ""
+		echo " * Search packages:   pkg search <query>"
+		echo " * Install a package: pkg install <package>"
+		echo " * Upgrade packages:  pkg upgrade"
+		echo ""
+		if [ "$TERMUX_PACKAGE_FORMAT" = "debian" ]; then
+			echo "Subscribing to additional repositories:"
+			echo ""
+			echo " * Root:     pkg install root-repo"
+			echo " * X11:      pkg install x11-repo"
+			echo ""
+		fi
+		echo "Report issues at https://termux.dev/issues"
+		echo ""
+	} > $TERMUX_PKG_BUILDER_DIR/motd
 	install -Dm600 $TERMUX_PKG_BUILDER_DIR/motd $TERMUX_PREFIX/etc/motd
 	install -Dm600 $TERMUX_PKG_BUILDER_DIR/motd-playstore $TERMUX_PREFIX/etc/motd-playstore
 	ln -sfr $TERMUX_PREFIX/bin/termux-open $TERMUX_PREFIX/bin/xdg-open
@@ -79,4 +103,9 @@ termux_step_make_install() {
 	## This script is sourced by $PREFIX/bin/login before executing shell.
 	##
 	EOF
+
+	mkdir -p $TERMUX_PREFIX/etc/termux
+	cp -r $TERMUX_PKG_BUILDER_DIR/mirrors $TERMUX_PREFIX/etc/termux/
+	cd $TERMUX_PREFIX
+	TERMUX_PKG_CONFFILES+=" $(find etc/termux/mirrors -type f)"
 }

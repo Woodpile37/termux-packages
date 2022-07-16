@@ -240,8 +240,14 @@ PACKAGES+=" llvm-12"
 # Required by cava
 PACKAGES+=" xxd"
 
+# Required by samba
+PACKAGES+=" libjson-perl"
+
 # Required for parsing repo.json
 PACKAGES+=" jq"
+
+# Required by txikijs's hostbuild step
+PACKAGES+=" libcurl4-openssl-dev"
 
 # Do not require sudo if already running as root.
 if [ "$(id -u)" = "0" ]; then

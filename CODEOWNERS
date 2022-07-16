@@ -1,5 +1,5 @@
 # Default assignment: frequent contributors from @termux.
-* @buttaface @Grimler91 @landfillbaby @thunder-coding
+* @buttaface @Grimler91 @landfillbaby
 
 # Build system.
 /build-all.sh @Grimler91
@@ -192,3 +192,4 @@
 /packages/rust/ @kcotugno
 /packages/squashfs-tools-ng/ @wmcbtech30
 /packages/xmake/ @waruqi
+/packages/pacman/ @Maxython
